@@ -40,10 +40,6 @@ retainers = {
 #     'Fur-seal': '7107199c63'
 # }
 
-# tax rates
-
-# https://universalis.app/api/tax-rates?world=42
-
 # tax ra
 DRIVER_PATH = '/opt/homebrew/bin/chromedriver'
 
@@ -166,6 +162,14 @@ for i in np.arange(0, IDs.size, 100):
 # add collumns
 df[['m7d', 'c7d', 's7d', 'm28d', 'c28d', 's28d', 'check']] = df.apply(lambda row: get_mean(row.ID, row.Price, row.HQ, price_history), axis=1, result_type="expand")
 
+
+# tax rates
+
+tax_url = 'https://universalis.app/api/tax-rates?world=42'
+results = requests.get(tax_url)
+taxrates = pd.json_normalize(results.text)
+
+
 df.to_csv('sellout.csv')
 
 writer = pd.ExcelWriter('MB_to_do.xlsx', engine='xlsxwriter')
@@ -194,4 +198,5 @@ worksheet.conditional_format('O2:O201', {'type':  'cell',
                                    'criteria': '==',
                                    'value': 1,
                                    'format': format_todo})
+taxrates.to_excel(writer, sheet_name="Tax rates")
 writer.save()
