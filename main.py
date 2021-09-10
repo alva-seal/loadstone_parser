@@ -167,7 +167,7 @@ df[['m7d', 'c7d', 's7d', 'm28d', 'c28d', 's28d', 'check']] = df.apply(lambda row
 
 tax_url = 'https://universalis.app/api/tax-rates?world=42'
 results = requests.get(tax_url)
-taxrates = pd.json_normalize(results.text)
+taxrates = pd.Series(results.text)
 
 
 df.to_csv('sellout.csv')
